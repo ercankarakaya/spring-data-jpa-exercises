@@ -1,5 +1,6 @@
 package com.ercan.controller;
 
+import com.ercan.dto.responseDto.TestEntityResponse;
 import com.ercan.entity.TestEntity;
 import com.ercan.repository.ProductRepository;
 import com.ercan.service.MyCriteriaApiService;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Calendar;
 import java.util.List;
 
@@ -95,9 +95,17 @@ public class TestController {
     }
 
     @GetMapping("/getNameOfTestByCityJoin")
-    public ResponseEntity getNameOfTestByCityJoin(@RequestBody TestEntity testEntity) {
-        return ResponseEntity.ok(myCriteriaApiService.getNameOfTestByCityCriteriaJoin(testEntity.getProductName(),testEntity.getCity()));
+    public ResponseEntity getNameOfTestByCityJoin(@RequestBody TestEntityResponse testEntityResponse) {
+        return ResponseEntity.ok(myCriteriaApiService.getNameOfTestByCityCriteriaJoin(testEntityResponse.getProductName(), testEntityResponse.getCity()));
     }
 
+    @GetMapping("/getNameAndProductNameCriteriaJoin")
+    public ResponseEntity getNameAndProductNameCriteriaJoin() {
+        List<String> strList = Lists.newArrayList();
+        myCriteriaApiService.getNameAndProductNameCriteriaJoin().forEach(t -> {
+            strList.add((String) t.get(0) + " - " + (String) t.get(1));
+        });
+        return ResponseEntity.ok(strList);
+    }
 
 }
