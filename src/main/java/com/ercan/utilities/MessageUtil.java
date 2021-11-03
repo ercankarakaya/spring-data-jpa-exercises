@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Component
-public class MessageUtility {
+public class MessageUtil {
 
     private final static String ERROR = "ERROR";
     private final static String INFO = "INFO";
