@@ -18,14 +18,14 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
      *
      * @return
      */
-    @Query("SELECT new com.ercan.dto.responseDTO.OrderResponse(c.name,p.productName)" +
+    @Query("SELECT new com.ercan.dto.responseDto.OrderResponse(c.name,p.productName)" +
             " FROM Customer c JOIN c.products p")
     public List<OrderResponse> getJoinInformation();
 
     /**
      * Erkek müşterileri getir.
      */
-    @Query("SELECT new com.ercan.dto.responseDTO.OrderResponse(c.name)" +
+    @Query("SELECT new com.ercan.dto.responseDto.OrderResponse(c.name)" +
             " FROM Customer c WHERE c.gender = 'male'")
     public List<OrderResponse> getMaleCustomers();
 
@@ -36,7 +36,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
             " WHERE c.gender='male'",nativeQuery = true)
     public List<Customer> getMaleCustomersWithNativeSQL();
 
-    @Query("select new com.ercan.dto.responseDTO.OrderResponse(c.name) from Customer c where c.name=:name")
+    @Query("select new com.ercan.dto.responseDto.OrderResponse(c.name) from Customer c where c.name=:name")
     public OrderResponse getCustomerByName(@PathParam("name") String name);
 
 
