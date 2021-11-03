@@ -1,4 +1,4 @@
-package com.ercan.dto.responseDTO;
+package com.ercan.dto.responseDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

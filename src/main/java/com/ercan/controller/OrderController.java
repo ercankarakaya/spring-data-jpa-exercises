@@ -1,7 +1,7 @@
 package com.ercan.controller;
 
-import com.ercan.dto.requestDTO.OrderRequest;
-import com.ercan.dto.responseDTO.OrderResponse;
+import com.ercan.dto.requestDto.OrderRequest;
+import com.ercan.dto.responseDto.OrderResponse;
 import com.ercan.entity.Customer;
 import com.ercan.repository.CustomerRepository;
 import com.ercan.repository.ProductRepository;

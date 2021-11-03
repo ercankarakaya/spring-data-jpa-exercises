@@ -1,4 +1,4 @@
-package com.ercan.dto.requestDTO;
+package com.ercan.dto.requestDto;
 
 import com.ercan.entity.Customer;
 import lombok.AllArgsConstructor;

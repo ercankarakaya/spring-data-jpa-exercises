@@ -12,10 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Service
@@ -138,11 +135,16 @@ public class MyCriteriaApiService {
 
     /**
      * Criteria Join
-     *
+     * get test name and product name
      */
     public List<Tuple> getNameAndProductNameCriteriaJoin() {
-
-        return null;
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
+        Root<TestEntity> root = criteriaQuery.from(TestEntity.class);
+        Join<TestEntity, Product> productJoin = root.join("product", JoinType.LEFT);
+        criteriaQuery.multiselect(root.get("name"), productJoin.get("productName"));
+        TypedQuery<Tuple> query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
     }
 
 
