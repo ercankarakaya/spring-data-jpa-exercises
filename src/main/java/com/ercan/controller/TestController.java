@@ -4,9 +4,8 @@ import com.ercan.entity.TestEntity;
 import com.ercan.repository.ProductRepository;
 import com.ercan.service.MyCriteriaApiService;
 import com.ercan.service.TestEntityService;
-import com.ercan.service.TestEntityServiceImpl;
 import com.ercan.utilities.CustomDateUtil;
-import com.ercan.utilities.MessageUtility;
+import com.ercan.utilities.MessageUtil;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ public class TestController {
     @Autowired
     private ProductRepository productRepo;
     @Autowired
-    private MessageUtility messageUtility;
+    private MessageUtil messageUtil;
     @Autowired
     private MyCriteriaApiService myCriteriaApiService;
 
@@ -36,7 +35,7 @@ public class TestController {
         try {
             TestEntity testEntity = testEntityService.getById(id);
             if (testEntity == null) {
-                return ResponseEntity.ok(messageUtility.errorMessage("error.testEntity.not.found"));
+                return ResponseEntity.ok(messageUtil.errorMessage("error.testEntity.not.found"));
             }
             return ResponseEntity.ok(testEntity);
         } catch (Exception e) {
@@ -50,7 +49,7 @@ public class TestController {
         try {
             testEntity.setProduct(testEntityService.findProductByTestEntity2());
             testEntityService.save(testEntity);
-            return ResponseEntity.ok(messageUtility.infoMessage("info.saved.success"));
+            return ResponseEntity.ok(messageUtil.infoMessage("info.saved.success"));
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(" unexpected error ->> " + e.getMessage(), HttpStatus.BAD_REQUEST);

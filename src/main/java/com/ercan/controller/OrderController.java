@@ -6,7 +6,7 @@ import com.ercan.entity.Customer;
 import com.ercan.repository.CustomerRepository;
 import com.ercan.repository.ProductRepository;
 import com.ercan.service.TestEntityServiceImpl;
-import com.ercan.utilities.InfoMessageUtility;
+import com.ercan.utilities.InfoMessageUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +90,7 @@ public class OrderController {
     public ResponseEntity getCustomerByName(@RequestBody String name) {
         OrderResponse orderResponse = customerRepo.getCustomerByName(name);
         if (orderResponse == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessageUtility.CUSTOMER_NAME_NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessageUtil.CUSTOMER_NAME_NOT_FOUND);
         }
         return ResponseEntity.ok(orderResponse);
     }
