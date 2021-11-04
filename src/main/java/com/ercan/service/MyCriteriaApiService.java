@@ -1,5 +1,6 @@
 package com.ercan.service;
 
+import com.ercan.dto.responseDto.TestEntityResponse;
 import com.ercan.entity.Address;
 import com.ercan.entity.Product;
 import com.ercan.entity.TestEntity;
@@ -14,6 +15,7 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -135,7 +137,7 @@ public class MyCriteriaApiService {
 
     /**
      * Criteria Join
-     * get test name and product name
+     * get test name and product name with Tuple
      */
     public List<Tuple> getNameAndProductNameCriteriaJoin() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -145,6 +147,20 @@ public class MyCriteriaApiService {
         criteriaQuery.multiselect(root.get("name"), productJoin.get("productName"));
         TypedQuery<Tuple> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
+    }
+
+    /**
+     * Criteria Join
+     * get test name and product name with DTO class -> TestEntityResponse
+     */
+    public Optional<List<TestEntityResponse>> getNameAndProductNameCriteriaJoin2() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TestEntityResponse> criteriaQuery = criteriaBuilder.createQuery(TestEntityResponse.class);
+        Root<TestEntity> root = criteriaQuery.from(TestEntity.class);
+        Join<TestEntity, Product> productJoin = root.join("product", JoinType.LEFT);
+        criteriaQuery.multiselect(root.get("name"), productJoin.get("productName"));
+        TypedQuery<TestEntityResponse> query = entityManager.createQuery(criteriaQuery);
+        return Optional.ofNullable(query.getResultList());
     }
 
 

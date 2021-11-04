@@ -1,7 +1,9 @@
 package com.ercan.controller;
 
+import com.ercan.dto.responseDto.Response;
 import com.ercan.dto.responseDto.TestEntityResponse;
 import com.ercan.entity.TestEntity;
+import com.ercan.exceptions.TestEntityNotFoundException;
 import com.ercan.handler.ResponseHandler;
 import com.ercan.repository.ProductRepository;
 import com.ercan.service.MyCriteriaApiService;
@@ -14,8 +16,10 @@ import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 
@@ -108,11 +112,24 @@ public class TestController {
         //return ResponseEntity.ok(myCriteriaApiService.getNameOfTestByCityCriteriaJoin(testEntityResponse.getProductName(), testEntityResponse.getCity()));
     }
 
+
+    @GetMapping("/getNameAndProductNameCriteriaJoin")
+    public ResponseEntity getNameAndProductNameCriteriaJoin() {
+
+        try {
+            return ResponseHandler.jsonGenerateResponse(messageUtil.infoMessage("info.data.listed"), HttpStatus.OK,
+                    myCriteriaApiService.getNameAndProductNameCriteriaJoin2());
+        } catch (Exception e) {
+            return ResponseHandler.jsonGenerateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
+        }
+
+    }
+
     /**
      * NOTE:Added spring.mvc.converters.preferred-json-mapper=gson the application.properties for JsonObject.
      */
-    @GetMapping("/getNameAndProductNameCriteriaJoin")
-    public ResponseEntity getNameAndProductNameCriteriaJoin() {
+    @GetMapping("/getNameAndProductNameCriteriaJoin2")
+    public ResponseEntity getNameAndProductNameCriteriaJoin2() {
 
         List<JsonObject> entities = new ArrayList<JsonObject>();
         myCriteriaApiService.getNameAndProductNameCriteriaJoin().forEach(t -> {
@@ -124,5 +141,35 @@ public class TestController {
 
         return ResponseEntity.ok(entities);
     }
+
+    @GetMapping("/getNameAndProductNameCriteriaJoin3")
+    public ResponseEntity getNameAndProductNameCriteriaJoin3() {
+        try {
+            Optional<List<TestEntityResponse>> testEntityResponses = myCriteriaApiService.getNameAndProductNameCriteriaJoin2();
+            if (testEntityResponses.isEmpty()) {
+                return new ResponseEntity<Object>(new Response(messageUtil.errorMessage("error.testEntity.not.found"),
+                        HttpStatus.MULTI_STATUS.value(), testEntityResponses), HttpStatus.MULTI_STATUS);
+            }
+            return ResponseEntity.ok(new Response(messageUtil.infoMessage("info.data.listed"), HttpStatus.OK.value(), testEntityResponses));
+        } catch (Exception e) {
+            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.MULTI_STATUS);
+        }
+    }
+
+    @GetMapping("/getNameAndProductNameCriteriaJoin4")
+    public ResponseEntity getNameAndProductNameCriteriaJoin4() {
+
+        try {
+            Optional<List<TestEntityResponse>> testEntityResponses = myCriteriaApiService.getNameAndProductNameCriteriaJoin2();
+
+            return ResponseHandler.jsonGenerateResponse(messageUtil.infoMessage("info.data.listed"), HttpStatus.OK,
+                    testEntityResponses.orElseThrow(() -> new TestEntityNotFoundException(messageUtil.errorMessage("error.testEntity.not.found"))));
+
+        } catch (Exception e) {
+            return ResponseHandler.jsonGenerateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
+        }
+
+    }
+
 
 }
