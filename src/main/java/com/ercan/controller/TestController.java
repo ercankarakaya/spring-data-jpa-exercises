@@ -18,6 +18,7 @@ import com.ercan.utilities.PageUtil;
 import com.google.gson.JsonObject;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -223,7 +224,10 @@ public class TestController {
                                           @RequestParam(value = "orders", required = false) String orders) {
         PageResponse<TestEntity> response = new PageResponse();
         Pageable pageable = PageUtil.getPageable(size, page, orders);
-        return ResponseEntity.ok(specificationService.searchTestEntityByName(pageable, name));
+        Page<TestEntity> entityPage=specificationService.searchTestEntityByName(pageable, name);
+        response.setPageStats(entityPage, Collections.singletonList(entityPage.getContent()));
+        //return ResponseEntity.ok(specificationService.searchTestEntityByName(pageable,name));
+        return ResponseEntity.ok(response);
     }
 
 
