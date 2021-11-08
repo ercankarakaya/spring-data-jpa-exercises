@@ -1,5 +1,6 @@
 package com.ercan.controller;
 
+import com.ercan.dto.responseDto.PageResponse;
 import com.ercan.dto.responseDto.Response;
 import com.ercan.dto.responseDto.TestEntityResponse;
 import com.ercan.entity.TestEntity;
@@ -8,16 +9,27 @@ import com.ercan.handler.ResponseHandler;
 import com.ercan.repository.ProductRepository;
 import com.ercan.service.criteria.MyCriteriaApiService;
 import com.ercan.service.TestEntityService;
+import com.ercan.service.specification.FilterSpecification;
+import com.ercan.service.specification.MySpecificationService;
+import com.ercan.service.specification.SearchCriteria;
 import com.ercan.utilities.CustomDateUtil;
 import com.ercan.utilities.MessageUtil;
+import com.ercan.utilities.PageUtil;
 import com.google.gson.JsonObject;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -32,6 +44,8 @@ public class TestController {
     private MessageUtil messageUtil;
     @Autowired
     private MyCriteriaApiService myCriteriaApiService;
+    @Autowired
+    private MySpecificationService specificationService;
 
 
     @GetMapping("/getById/{id}")
@@ -48,10 +62,10 @@ public class TestController {
         }
     }
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save")
     public ResponseEntity saveTestEntity(@RequestBody TestEntity testEntity) {
         try {
-            testEntity.setProduct(testEntityService.findProductByTestEntity2());
+            //testEntity.setProduct(testEntityService.findProductByTestEntity2());
             testEntityService.save(testEntity);
             return ResponseEntity.ok(messageUtil.infoMessage("info.saved.success"));
         } catch (Exception e) {
@@ -168,7 +182,54 @@ public class TestController {
 
     }
 
-    
+    //Filter with Specification
+    @GetMapping("/searchByTestEntityParameters")
+    public ResponseEntity searchByTestEntityParameters(@RequestBody TestEntity testEntity) {
+        return ResponseEntity.ok(specificationService.searchByTestEntityParameters(testEntity));
+    }
+
+//    @GetMapping("/testEntities")
+//    public ResponseEntity<?> search(@RequestParam(value = "search") String search) {
+//        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+//        Matcher matcher = pattern.matcher(search + ",");
+//        List<SearchCriteria> params = Lists.newArrayList();
+//        while (matcher.find()) {
+//            params.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+//        }
+//
+//        FilterSpecification spec = new FilterSpecification(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+//        return ResponseEntity.ok(testEntityService.findAll(spec));
+//    }
+
+    @GetMapping("/entitiesByIdAndName")
+    public ResponseEntity<?> searchByIdAndName(@RequestParam(value = "page", defaultValue = "0") int page,
+                                               @RequestParam(value = "size", defaultValue = "20") int size,
+                                               @RequestParam(value = "orders", required = false) String orders,
+                                               @RequestParam(value = "id") int id,
+                                               @RequestParam(value = "name") String name) {
+        PageResponse<TestEntity> response = new PageResponse();
+        Pageable pageable = PageUtil.getPageable(size, page, orders);
+        return ResponseEntity.ok(specificationService.searchTestEntityByIdAndName(pageable, id, name));
+    }
+
+    /**
+     * Example Requests :
+     * url: localhost:7777/test/entitiesByName?page=1&size=20&name=Ali&orders=createdDate%7CASC
+     * url: localhost:7777/test/entitiesByName?page=1&size=20&name=Ali&orders=
+     */
+    @GetMapping("/entitiesByName")
+    public ResponseEntity<?> searchByName(@RequestParam(value = "page", defaultValue = "0") int page,
+                                          @RequestParam(value = "size", defaultValue = "20") int size,
+                                          @RequestParam(value = "name") String name,
+                                          @RequestParam(value = "orders", required = false) String orders) {
+        PageResponse<TestEntity> response = new PageResponse();
+        Pageable pageable = PageUtil.getPageable(size, page, orders);
+        Page<TestEntity> entityPage=specificationService.searchTestEntityByName(pageable, name);
+        response.setPageStats(entityPage, Collections.singletonList(entityPage.getContent()));
+        //return ResponseEntity.ok(specificationService.searchTestEntityByName(pageable,name));
+        return ResponseEntity.ok(response);
+    }
+
 
 
 }

@@ -1,11 +1,14 @@
 package com.ercan.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ercan.utilities.CustomDateUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -14,12 +17,17 @@ import java.util.Calendar;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class TestEntity {
     @Id
     @GeneratedValue
     private int id;
     private String name;
+    private Long no;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar createdDate;
 
     @ManyToOne
@@ -28,17 +36,18 @@ public class TestEntity {
     //@JsonProperty("entityProduct")
     private Product product;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @PrePersist
-    public void onCreaete() {
-        setCreatedDate(Calendar.getInstance());
-    }
+//    @PrePersist
+//    public void onCreaete() {
+//        setCreatedDate(Calendar.getInstance());
+//    }
 
     private transient String productName;
     private transient String city;
+    private transient Calendar maxCreatedDate;
 
     public TestEntity(String name, Calendar createdDate, String productName) {
         this.name = name;
