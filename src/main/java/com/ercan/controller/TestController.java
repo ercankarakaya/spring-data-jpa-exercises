@@ -6,20 +6,17 @@ import com.ercan.entity.TestEntity;
 import com.ercan.exceptions.TestEntityNotFoundException;
 import com.ercan.handler.ResponseHandler;
 import com.ercan.repository.ProductRepository;
-import com.ercan.service.MyCriteriaApiService;
+import com.ercan.service.criteria.MyCriteriaApiService;
 import com.ercan.service.TestEntityService;
 import com.ercan.utilities.CustomDateUtil;
 import com.ercan.utilities.MessageUtil;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.JsonObject;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 
@@ -170,6 +167,8 @@ public class TestController {
         }
 
     }
+
+    
 
 
 }

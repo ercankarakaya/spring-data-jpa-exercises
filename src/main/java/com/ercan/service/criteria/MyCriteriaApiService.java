@@ -1,10 +1,9 @@
-package com.ercan.service;
+package com.ercan.service.criteria;
 
 import com.ercan.dto.responseDto.TestEntityResponse;
 import com.ercan.entity.Address;
 import com.ercan.entity.Product;
 import com.ercan.entity.TestEntity;
-import org.aspectj.weaver.ast.Test;
 import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
