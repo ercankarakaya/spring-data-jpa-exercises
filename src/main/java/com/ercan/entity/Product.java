@@ -1,30 +1,31 @@
 package com.ercan.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Entity
+@Builder
 public class Product {
 
     @Id
     private int p_id;
     private String productName;
     private int qty;
-    private int price;
+    private Double price;
 
+/*
     @OneToMany(fetch = FetchType.LAZY)
     @OrderBy("CREATED_DATE DESC")
-    @JsonIgnore
+    //@JsonIgnore
     private List<TestEntity> testEntity;
+*/
 
 }

@@ -3,9 +3,11 @@ package com.ercan.service;
 import com.ercan.entity.Product;
 import com.ercan.entity.TestEntity;
 import com.ercan.repository.ProductRepository;
-import org.assertj.core.util.Lists;
+import com.ercan.repository.TestEntityRepository;
+import com.ercan.service.specification.FilterSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,9 @@ public class TestEntityServiceImpl implements TestEntityService {
     private EntityManager entityManager;
 
     @Autowired
+    private TestEntityRepository testEntityRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
 
@@ -28,11 +33,17 @@ public class TestEntityServiceImpl implements TestEntityService {
         return entityManager.find(TestEntity.class, id);
     }
 
+    @Override
+    public List<TestEntity> findAll(Specification specification) {
+        return testEntityRepository.findAll(specification);
+    }
+
+
     //@Transactional
     public void save(TestEntity testEntity) {
         entityManager.persist(testEntity);
-    }
 
+    }
 
     public List getEntityProductIds() {
         List entityProductIds = new ArrayList();

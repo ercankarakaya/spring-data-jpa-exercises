@@ -1,9 +1,11 @@
 package com.ercan.controller;
 
+import com.ercan.entity.Product;
 import com.ercan.repository.CustomerRepository;
 import com.ercan.repository.ProductRepository;
 import com.ercan.service.criteria.MyCriteriaApiService;
 import com.ercan.service.TestEntityService;
+import com.ercan.service.specification.MySpecificationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -27,7 +31,9 @@ public class ProductController {
     @Autowired
     private TestEntityService testEntityService;
     @Autowired
-    private MyCriteriaApiService myCriteriaApiService;
+    private MyCriteriaApiService criteriaApiService;
+    @Autowired
+    private MySpecificationService specificationService;
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<?> getProductById(@PathVariable int id) {
@@ -41,19 +47,23 @@ public class ProductController {
 
     @GetMapping("/getCriteriaAllProduct")
     public ResponseEntity<?> getCriteriaAllProduct(){
-        return ResponseEntity.ok(myCriteriaApiService.getProductAll());
+        return ResponseEntity.ok(criteriaApiService.getProductAll());
     }
 
     @GetMapping("/getCriteriaProductNameList")
     public ResponseEntity<?> getCriteriaProductNameList(){
-        return ResponseEntity.ok(myCriteriaApiService.getProductNameList());
+        return ResponseEntity.ok(criteriaApiService.getProductNameList());
     }
 
     @GetMapping("/getCriteriaProductNameList2")
     public ResponseEntity<?> getCriteriaProductNameList2(){
-        return ResponseEntity.ok(myCriteriaApiService.getProductNameList2());
+        return ResponseEntity.ok(criteriaApiService.getProductNameList2());
     }
 
+    @GetMapping("/getAllProductByNameAndPrice")
+    public ResponseEntity<?> getAllProductByNameAndPrice(){
+        return ResponseEntity.ok(specificationService.findProductByNameAndPriceSpec());
+    }
 
 
 }
