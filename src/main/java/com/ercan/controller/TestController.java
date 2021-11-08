@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -171,10 +172,14 @@ public class TestController {
     public ResponseEntity getNameAndProductNameCriteriaJoin4() {
 
         try {
-            Optional<List<TestEntityResponse>> testEntityResponses = myCriteriaApiService.getNameAndProductNameCriteriaJoin2();
+//            Optional<List<TestEntityResponse>> testEntityResponses = myCriteriaApiService.getNameAndProductNameCriteriaJoin2();
+//            return ResponseHandler.jsonGenerateResponse(messageUtil.infoMessage("info.data.listed"), HttpStatus.OK,
+//                    testEntityResponses.orElseThrow(() -> new TestEntityNotFoundException(messageUtil.errorMessage("error.testEntity.not.found"))));
 
             return ResponseHandler.jsonGenerateResponse(messageUtil.infoMessage("info.data.listed"), HttpStatus.OK,
-                    testEntityResponses.orElseThrow(() -> new TestEntityNotFoundException(messageUtil.errorMessage("error.testEntity.not.found"))));
+                    Optional.ofNullable(myCriteriaApiService.getNameAndProductNameCriteriaJoin2())
+                            .map(entity -> ResponseEntity.ok(entity))
+                            .orElseThrow(() -> new TestEntityNotFoundException(messageUtil.errorMessage("error.testEntity.not.found"))));
 
         } catch (Exception e) {
             return ResponseHandler.jsonGenerateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
@@ -185,7 +190,9 @@ public class TestController {
     //Filter with Specification
     @GetMapping("/searchByTestEntityParameters")
     public ResponseEntity searchByTestEntityParameters(@RequestBody TestEntity testEntity) {
-        return ResponseEntity.ok(specificationService.searchByTestEntityParameters(testEntity));
+        List<TestEntity> testEntityList = Lists.newArrayList();
+        Optional.ofNullable(testEntity).ifPresent(item -> specificationService.searchByTestEntityParameters(item).forEach(testEntityList::add));
+        return ResponseEntity.ok(testEntityList);
     }
 
 //    @GetMapping("/testEntities")
@@ -224,12 +231,11 @@ public class TestController {
                                           @RequestParam(value = "orders", required = false) String orders) {
         PageResponse<TestEntity> response = new PageResponse();
         Pageable pageable = PageUtil.getPageable(size, page, orders);
-        Page<TestEntity> entityPage=specificationService.searchTestEntityByName(pageable, name);
+        Page<TestEntity> entityPage = specificationService.searchTestEntityByName(pageable, name);
         response.setPageStats(entityPage, Collections.singletonList(entityPage.getContent()));
         //return ResponseEntity.ok(specificationService.searchTestEntityByName(pageable,name));
         return ResponseEntity.ok(response);
     }
-
 
 
 }

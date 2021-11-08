@@ -77,15 +77,15 @@ public class MySpecificationService {
     //Using Generic Specification Filter by id and name.
     public Page<TestEntity> searchTestEntityByIdAndName(Pageable pageable, int id, String name) {
         GenericSpecificationBuilder<TestEntity> builder = new GenericSpecificationBuilder<>();
-        Optional.ofNullable(id).ifPresent(item->builder.with(testEntitySpecificationFactory.isEqual("id",id)));
-        Optional.ofNullable(name).ifPresent(item->builder.with(testEntitySpecificationFactory.isLike("name",name)));
+        Optional.ofNullable(id).ifPresent(item -> builder.with(testEntitySpecificationFactory.isEqual("id", id)));
+        Optional.ofNullable(name).ifPresent(item -> builder.with(testEntitySpecificationFactory.isLike("name", name)));
         return testEntityRepository.findAll(builder.build(), pageable);
     }
 
     //Using Generic Specification Filter
     public Page<TestEntity> searchTestEntityByName(Pageable pageable, String name) {
         GenericSpecificationBuilder<TestEntity> builder = new GenericSpecificationBuilder<>();
-        Optional.ofNullable(name).ifPresent(item->builder.with(testEntitySpecificationFactory.isLike("name",item)));
+        Optional.ofNullable(name).ifPresent(item -> builder.with(testEntitySpecificationFactory.isLike("name", item)));
         return testEntityRepository.findAll(builder.build(), pageable);
     }
 
