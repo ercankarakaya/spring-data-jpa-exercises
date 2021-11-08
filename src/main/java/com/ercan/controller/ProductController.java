@@ -2,9 +2,8 @@ package com.ercan.controller;
 
 import com.ercan.repository.CustomerRepository;
 import com.ercan.repository.ProductRepository;
-import com.ercan.service.MyCriteriaApiService;
+import com.ercan.service.criteria.MyCriteriaApiService;
 import com.ercan.service.TestEntityService;
-import com.ercan.service.TestEntityServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
