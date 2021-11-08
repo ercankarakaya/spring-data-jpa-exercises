@@ -41,8 +41,7 @@ public class TestEntityServiceImpl implements TestEntityService {
 
     //@Transactional
     public void save(TestEntity testEntity) {
-        entityManager.persist(testEntity);
-
+      entityManager.persist(testEntity);
     }
 
     public List getEntityProductIds() {
